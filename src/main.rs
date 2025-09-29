@@ -10,20 +10,13 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 
-static HELLO: &[u8] = b"Why are you gay?";
+mod vga_buffer;
 
 #[unsafe(no_mangle)] // don't mangle the name of this function
 pub extern "C" fn _start() -> ! {
     // entry point of the funtion where the linker will look
     // for start by default
-    let vga_buffer = 0xb8000 as *mut u8;
-
-    for (i, &byte) in HELLO.iter().enumerate() {
-	unsafe {
-	    *vga_buffer.offset(i as isize * 2) = byte;
-	    *vga_buffer.offset(i as isize * 2 + 1) = 0xb;
-	}
-    }
+    vga_buffer::print_something();
     
     loop{}
 }
